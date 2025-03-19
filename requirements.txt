@@ -1,0 +1,7 @@
+streamlit
+opencv-python
+pillow
+ultralytics
+pytesseract
+gTTS
+pandas
