@@ -69,54 +69,37 @@ def extract_text_from_image(image):
 # Streamlit App
 st.title("ENCHANCING THE LIVES OF VISUALLY IMPARIED PEOPLE")
 
-# Login Page
-if 'logged_in' not in st.session_state:
-    st.session_state.logged_in = False
-
-if not st.session_state.logged_in:
-    st.subheader("Login")
-    username = st.text_input("Username")
-    password = st.text_input("Password", type="password")
-
-    if st.button("Login"):
-        if username == "Admin" and password == "123":
-            st.session_state.logged_in = True
-            st.success("Logged in as Admin")
-        else:
-            st.error("Invalid username or password")
-
 # Main App Functionality
-if st.session_state.logged_in:
-    st.subheader("Capture an Image")
-    camera_input = st.camera_input("Capture an image")
+st.subheader("Capture an Image")
+camera_input = st.camera_input("Capture an image")
 
-    if camera_input is not None:
-        image = Image.open(camera_input)
-        st.image(image, caption="Captured Image", use_column_width=True)
+if camera_input is not None:
+    image = Image.open(camera_input)
+    st.image(image, caption="Captured Image", use_column_width=True)
 
-        # Process Image
-        if st.button("Process Image"):
-            st.write("Processing...")
-            class_counts = process_image(image)  # Get the object counts from the image
-            extracted_text = extract_text_from_image(image)
+    # Process Image
+    if st.button("Process Image"):
+        st.write("Processing...")
+        class_counts = process_image(image)  # Get the object counts from the image
+        extracted_text = extract_text_from_image(image)
 
-            # Check results and display appropriate messages
-            if class_counts and extracted_text:
-                result_text = convert_counts_to_text(class_counts) + f". Recognized text: {extracted_text}"
-                st.write(result_text)
-                audio_output = text_to_speech(result_text)  # Convert result to speech
-            elif class_counts:
-                result_text = convert_counts_to_text(class_counts) + ". No text found."
-                st.write(result_text)
-                audio_output = text_to_speech(result_text)
-            elif extracted_text:
-                result_text = f"No objects found. Recognized text: {extracted_text}"
-                st.write(result_text)
-                audio_output = text_to_speech(result_text)
-            else:
-                result_text = "No objects or text found."
-                st.write(result_text)
-                audio_output = text_to_speech(result_text)
+        # Check results and display appropriate messages
+        if class_counts and extracted_text:
+            result_text = convert_counts_to_text(class_counts) + f". Recognized text: {extracted_text}"
+            st.write(result_text)
+            audio_output = text_to_speech(result_text)  # Convert result to speech
+        elif class_counts:
+            result_text = convert_counts_to_text(class_counts) + ". No text found."
+            st.write(result_text)
+            audio_output = text_to_speech(result_text)
+        elif extracted_text:
+            result_text = f"No objects found. Recognized text: {extracted_text}"
+            st.write(result_text)
+            audio_output = text_to_speech(result_text)
+        else:
+            result_text = "No objects or text found."
+            st.write(result_text)
+            audio_output = text_to_speech(result_text)
 
-            # Play the audio output
-            st.audio(audio_output)  # Stream audio output
+        # Play the audio output
+        st.audio(audio_output)  # Stream audio output
