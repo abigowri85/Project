@@ -1,5 +1,5 @@
-import streamlit as st
 import os
+import streamlit as st
 import cv2
 import numpy as np
 import pandas as pd
@@ -8,8 +8,16 @@ import pytesseract
 from PIL import Image
 from gtts import gTTS
 
-# Set the path for Tesseract
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+# Install Tesseract if running in a cloud environment (Linux/Ubuntu)
+if os.name == 'posix':  # Linux or macOS
+    os.system("apt-get update -y")
+    os.system("apt-get install -y tesseract-ocr")
+
+# Set the pytesseract path (for cloud environment, no need for the `.exe` on Linux)
+if os.name == 'nt':  # Windows environment
+    pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'  # For Windows, use the actual path to tesseract.exe
+else:
+    pytesseract.pytesseract.tesseract_cmd = 'tesseract'  # For Linux/macOS, it will use the system tesseract
 
 # Function to convert text to speech and save as output.mp3
 def text_to_speech(text):
